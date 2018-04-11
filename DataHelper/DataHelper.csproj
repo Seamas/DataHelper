@@ -7,9 +7,10 @@
     <Company></Company>
     <Copyright>MIT</Copyright>
     <RepositoryUrl>https://github.com/Seamas/DataHelper.git</RepositoryUrl>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <PackageReleaseNotes>parse datarow/datatable (with reflection) to customer type</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/Seamas/DataHelper/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>

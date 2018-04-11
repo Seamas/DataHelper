@@ -4,15 +4,19 @@ using System.Text;
 
 namespace DataHelper
 {
-    internal class TypeConverter
+    public class TypeConverter
     {
+        public static T ChangeType<T>(object value)
+        {
+            return (T)ChangeType(value, typeof(T));
+        }
+
         public static object ChangeType(object value, Type type)
         {
-            if (type != typeof(string) && (value == null || value.ToString() == ""))
+            if (type != typeof(string) && (value == null || string.IsNullOrEmpty(value.ToString())))
             {
                 value = null;
             }
-
             if (value == null && type.IsGenericType) return Activator.CreateInstance(type);
             if (value == null) return null;
             if (type == value.GetType()) return value;
