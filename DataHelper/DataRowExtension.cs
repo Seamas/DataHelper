@@ -24,7 +24,7 @@ namespace DataHelper
             {
                 string columnName = dr.Table.Columns[i].ColumnName;
                 var property = PropertyHelper.SetProperty(obj.GetType(), columnName);
-                PropertyHelper.SetValue(property, obj, dr[i]);
+                PropertyHelper.SetValue(property, obj, dr[columnName]);
             }
             return obj;
         }

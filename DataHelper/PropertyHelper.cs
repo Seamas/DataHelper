@@ -29,15 +29,15 @@ namespace DataHelper
 
         public static void SetValue(PropertyInfo property, object obj, object value)
         {
-            try
+            if (property != null)
             {
-                var valueForType = TypeConverter.ChangeType(value, property?.PropertyType);
-                property?.SetValue(obj, valueForType);
+                try
+                {
+                    var valueForType = TypeConverter.ChangeType(value, property.PropertyType);
+                    property.SetValue(obj, valueForType);
+                }
+                catch { }
             }
-            catch (Exception ex)
-            {
-            }
-            
         }
     }
 }

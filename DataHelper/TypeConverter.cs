@@ -13,6 +13,7 @@ namespace DataHelper
 
         public static object ChangeType(object value, Type type)
         {
+            if (type == null) return value;
             if (type != typeof(string) && (value == null || string.IsNullOrEmpty(value.ToString())))
             {
                 value = null;
