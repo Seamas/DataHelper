@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataHelper
+namespace Seamas.DataHelper
 {
     public class TypeConverter
     {

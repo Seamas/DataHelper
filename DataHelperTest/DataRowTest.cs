@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
-using DataHelper;
+using Seamas.DataHelper;
 using Shouldly;
 
 namespace DataHelperTest

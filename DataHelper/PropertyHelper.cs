@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace DataHelper
+namespace Seamas.DataHelper
 {
     internal class PropertyHelper
     {

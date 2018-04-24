@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace DataHelper
+namespace Seamas.DataHelper
 {
     public static class DataRowExtension
     {
