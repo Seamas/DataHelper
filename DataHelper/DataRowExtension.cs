@@ -1,32 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Seamas.DataHelper
 {
     public static class DataRowExtension
     {
-        public static T MapToObject<T>(this DataRow dr)
+        /// <summary>
+        /// 映射成T类型的对象
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T MapTo<T>(this DataRow dr)
         {
             var obj = Activator.CreateInstance<T>();
             return (T)MapTo(dr, obj);
         }
-
-        public static object MapToObject(this DataRow dr, object obj)
+        
+        /// <summary>
+        /// 映射到obj对象
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static object MapTo(this DataRow dr, object obj)
         {
-            return MapTo(dr, obj);
+            var propertyNames = GetColumnNames(dr);
+            var dictionary = PropertyHelper.SetMapping(obj.GetType(), propertyNames);
+            Mapping(dr, dictionary, obj);
+            return obj;
         }
 
-        private static object MapTo(DataRow dr, object obj)
+        /// <summary>
+        /// 根据字典进行映射
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <param name="dictionary"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T MapWithDictionary<T>(this DataRow dr, Dictionary<string, PropertyInfo> dictionary)
         {
-            for (int i = 0; i < dr.Table.Columns.Count; i++)
-            {
-                string columnName = dr.Table.Columns[i].ColumnName;
-                var property = PropertyHelper.SetProperty(obj.GetType(), columnName);
-                PropertyHelper.SetValue(property, obj, dr[columnName]);
-            }
+            var obj = Activator.CreateInstance<T>();
+            Mapping(dr, dictionary, obj);
             return obj;
+        }
+
+        /// <summary>
+        /// 根据字典映射到obj
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <param name="dictionary"></param>
+        /// <param name="obj"></param>
+        private static void Mapping(DataRow dr, Dictionary<string, PropertyInfo> dictionary, object obj)
+        {
+            foreach (var kvp in dictionary)
+            {
+                PropertyHelper.SetValue(kvp.Value, obj, dr[kvp.Key]);
+            }
+        }
+
+
+        /// <summary>
+        /// 获取所有列名
+        /// </summary>
+        /// <param name="dr"></param>
+        /// <returns></returns>
+        private static IEnumerable<string> GetColumnNames(DataRow dr)
+        {
+            foreach (DataColumn dataColumn in dr.Table.Columns)
+            {
+                yield return dataColumn.ColumnName;
+            }
         }
     }
 }

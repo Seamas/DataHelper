@@ -4,8 +4,14 @@ using System.Text;
 
 namespace Seamas.DataHelper
 {
-    public class TypeConverter
+    public static class TypeConverter
     {
+        /// <summary>
+        /// 把 value 转换成T类型
+        /// </summary>
+        /// <param name="value">原始对象的值</param>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <returns></returns>
         public static T ChangeType<T>(object value)
         {
             return (T)ChangeType(value, typeof(T));
@@ -18,26 +24,39 @@ namespace Seamas.DataHelper
             {
                 value = null;
             }
-            if (value == null && type.IsGenericType) return Activator.CreateInstance(type);
-            if (value == null) return null;
+            
+            switch (value)
+            {
+                case null when type.IsGenericType:
+                    return Activator.CreateInstance(type);
+                case null:
+                    return null;
+            }
+
             if (type == value.GetType()) return value;
             if (type.IsEnum)
             {
-                if (value is string)
-                    return Enum.Parse(type, value as string);
-                else
-                    return Enum.ToObject(type, value);
+                if (value is string s)
+                    return Enum.Parse(type, s);
+                
+                return Enum.ToObject(type, value);
             }
             if (!type.IsInterface && type.IsGenericType)
             {
-                Type innerType = type.GetGenericArguments()[0];
-                object innerValue = ChangeType(value, innerType);
-                return Activator.CreateInstance(type, new object[] { innerValue });
+                var innerType = type.GetGenericArguments()[0];
+                var innerValue = ChangeType(value, innerType);
+                return Activator.CreateInstance(type, innerValue);
             }
-            if (value is string && type == typeof(Guid)) return new Guid(value as string);
-            if (value is string && type == typeof(Version)) return new Version(value as string);
-            if (!(value is IConvertible)) return value;
-            return Convert.ChangeType(value, type);
+            
+            switch (value)
+            {
+                case string s when type == typeof(Guid):
+                    return new Guid(s);
+                case string s1 when type == typeof(Version):
+                    return new Version(s1);
+            }
+
+            return !(value is IConvertible) ? value : Convert.ChangeType(value, type);
         }
     }
 }
